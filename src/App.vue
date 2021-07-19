@@ -3,9 +3,9 @@
     <!-- ヘッダー -->
     <v-app-bar app color="primary" dark >
       <div class="d-flex align-center">
-        <v-toolbar-tittle class="headline text-uppercase">
+        <v-toolbar-title class="headline text-uppercase">
           <span class="ml-6">スケジュール表</span>
-        </v-toolbar-tittle>
+        </v-toolbar-title>
       </div>
       <v-spacer></v-spacer>
     </v-app-bar>
