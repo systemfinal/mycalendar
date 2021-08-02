@@ -75,7 +75,7 @@ export default {
   },
   methods: {
     addData(){
-      alert(this.currentDate);
+      console.log("addData() " + this.currentDate);
       this.$router.push({ name: "SaveMemo", 
                           params: {
                             selectDate: this.currentDate,
@@ -90,14 +90,14 @@ export default {
       return;
     },
     updateData(record){
-      alert(JSON.stringify(record));
+      console.log("updateData() " + JSON.stringify(record));
       this.$router.push({ name: "SaveMemo", 
                           params: {selectDate: this.currentDate,
                                    memo: record }}).catch(() => {});
       return;
     },
     deleteData(uniqKey){
-      alert(uniqKey);
+      console.log("deleteData ID=" + uniqKey);
       if(uniqKey){
         console.log("deleteData(" + uniqKey + ").DELETE Start");
         axios.delete(`https://sysfin-nodeapp1.herokuapp.com/api/v1/memo/` + uniqKey)
@@ -106,7 +106,7 @@ export default {
             // 対象日のメモデータを再取得する
             this.getMemoData(this.currentDate);
         })
-        .catch(error => alert(JSON.stringify(error)))
+        .catch(error => console.log(JSON.stringify(error)))
       }
       return;
     },
@@ -127,7 +127,7 @@ export default {
             return 0;
           });
 
-      }).catch(error => alert("get memo data error : " + JSON.stringify(error)))
+      }).catch(error => console.log("get memo data error : " + JSON.stringify(error)))
 
       return;
     },
@@ -151,7 +151,9 @@ export default {
           // 対象日プロパティにセッションの値を設定する
           this.currentDate = sessionStorage.getItem('selectDate2');
       }else{
-          alert("プログラムエラー（対象日が不明）");
+          alert("このページを直接に開くことはできません。");
+          this.$router.push({ path: '/' });    // ルート画面を呼ぶ
+          return;
       }
 
       // 対象日のメモデータを取得する

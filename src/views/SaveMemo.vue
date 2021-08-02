@@ -17,7 +17,7 @@
         </v-app-bar>
 
         <template v-if="isError">
-            <v-card flat tile class="text-h6 mb-4 px-2 wrap" color="red">{{ errorString }}</v-card>
+            <v-card flat tile class="white--text text-h6 mb-4 px-2 wrap" color="red">{{ errorString }}</v-card>
         </template>
 
         <v-row no-gutters class="mb-1">
@@ -261,6 +261,11 @@ export default {
         },
     },
     created() {
+        if(!this.memo){    // パラメータがないので直接呼出しということになる
+          alert("このページを直接に開くことはできません。");
+          this.$router.push({ path: '/' });    // ルート画面を呼ぶ
+          return;
+        }
         // ローカルへコピーする
         this.request = this.memo;
         this.consts = constants;
