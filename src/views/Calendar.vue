@@ -1,9 +1,9 @@
 <template>
 <div>
     <h2 class="ml-10 mt-2">{{ currentDate.format("YYYY年MM月") }}</h2>
-    <v-btn @click="prevMonth" color="primary" elevation="2" outlined class="ml-10 mb-2 pa-4">前月</v-btn>
-    <v-btn @click="nextMonth" color="primary" elevation="2" outlined class="ml-2 mb-2 pa-4">次月</v-btn>
-    <v-container class="indigo lighten-3 mt-2">
+    <v-btn @click="prevMonth" color="primary" elevation="2" outlined class="ml-10 mb-1 pa-4">前月</v-btn>
+    <v-btn @click="nextMonth" color="primary" elevation="2" outlined class="ml-2 mb-1 pa-4">次月</v-btn>
+    <v-container class="indigo lighten-3 my-4">
         <v-row no-gutters rows=1 style="height: 30px;"
             justify="center" align-content="center" class="indigo lighten-3 pl-1">
             <v-col cols=1.7 v-for="n in 7" v-bind:key="n">
