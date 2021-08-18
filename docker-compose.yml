@@ -1,0 +1,35 @@
+#docker-composeのバージョンを指定
+version: "3.8"
+
+volumes:
+    #volumeはホストにコピー or 表示させないもの
+    ##バイナリファイル（node_module）など、OS依存があるもの
+
+    #node_moduleを入れるvolume
+    mycalendar-node-volume: 
+
+services:
+    # app はサービス名、何個も記述できる
+    app:
+        # コンテナ名
+        container_name: app_mycalendar
+        # イメージ名:タグ  ----- タグはVersionなどを指定だが無しにするとlatestになる
+        image: app_mycalendar
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - "8080:8080"
+        volumes:
+            #node_moduleを入れるボリューム ----- ホスト側:コンテナ側
+            - mycalendar-node-volume:/app/node_modules
+
+            #コンテナ内の指定ディレクトリをホスト側と同期 ----- ホスト側:コンテナ側
+            - .:/app/
+
+        #-it
+        stdin_open: true
+        tty: true
+
+        # アプリ起動
+        command: yarn serve
