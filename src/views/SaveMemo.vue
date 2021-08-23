@@ -149,10 +149,8 @@
   </v-container>
 </template>
 
-<style scoped>
-    .wrap {
-        white-space: pre;
-    }
+<style>
+    @import "../style/MyStyle.css";
 </style>
 
 <script>
@@ -177,31 +175,32 @@ export default {
     },
     methods: {
         checkInput(record){
-            console.log("checkInput() Start");
-            console.log(JSON.stringify(record));
+            //console.log("checkInput() Start");
+            //console.log(JSON.stringify(record));
 
             // エラー表示領域のクリアー
             this.isError = false;
             this.errorString = "";
 
             // パラメータチェックの実行 
-            var {error, value} = this.schema.validate(record, { abortEarly: false })
+            //var {error, value} = this.schema.validate(record, { abortEarly: false })
+            var {error} = this.schema.validate(record, { abortEarly: false })
             if(error){
-                console.log("check Error !!!");
-                console.log(error.message);
+                //console.log("check Error !!!");
+                //console.log(error.message);
                 //error.details.forEach(element => console.log(element.Error));
                 //error.details.forEach(element => this.errorString = (this.errorString + element.Error + "\r\n") );
                 this.errorString = error.message;
                 this.isError = true;
                 return(false);        
             } else {
-                console.log('all check OK !!!');
-                console.log(JSON.stringify(value));
+                //console.log('all check OK !!!');
+                //alert(JSON.stringify(value));
             }
             return(true);
         },
         saveData(record){
-            console.log("saveData() Start");
+            //console.log("saveData() Start");
 
             // 開始日付の編集
             if(this.dateStart && this.timeStart){
@@ -219,16 +218,16 @@ export default {
             }
 
             if(record.id){    // 更新作業（ＰＵＴ）
-                console.log("saveData().PUT Start");
+                //console.log("saveData().PUT Start");
 
                 axios.put(`https://sysfin-nodeapp1.herokuapp.com/api/v1/memo/` + record.id, record)
-                .then(respons => {
-                    console.log(JSON.stringify(respons));
+                .then(() => {
+                    //console.log(JSON.stringify(respons));
                 })
                 .catch(error => alert(JSON.stringify(error)))
 
             }else{            // 新規追加作業（ＰＯＳＴ）
-                console.log("saveData().POST Start");
+                //console.log("saveData().POST Start");
 
                 axios.post(`https://sysfin-nodeapp1.herokuapp.com/api/v1/memo/`, 
                     { title: record.title,
@@ -237,8 +236,8 @@ export default {
                       usemin: record.usemin,
                       level: record.level }
                 )
-                .then(respons => {
-                    console.log(JSON.stringify(respons));
+                .then(() => {
+                    //console.log(JSON.stringify(respons));
                 })
                 .catch(error => alert(JSON.stringify(error)))
 

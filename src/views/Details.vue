@@ -75,7 +75,7 @@ export default {
   },
   methods: {
     addData(){
-      console.log("addData() " + this.currentDate);
+      //console.log("addData() " + this.currentDate);
       this.$router.push({ name: "SaveMemo", 
                           params: {
                             selectDate: this.currentDate,
@@ -90,23 +90,24 @@ export default {
       return;
     },
     updateData(record){
-      console.log("updateData() " + JSON.stringify(record));
+      //console.log("updateData() " + JSON.stringify(record));
       this.$router.push({ name: "SaveMemo", 
                           params: {selectDate: this.currentDate,
                                    memo: record }}).catch(() => {});
       return;
     },
     deleteData(uniqKey){
-      console.log("deleteData ID=" + uniqKey);
+      //console.log("deleteData ID=" + uniqKey);
       if(uniqKey){
-        console.log("deleteData(" + uniqKey + ").DELETE Start");
+        //console.log("deleteData(" + uniqKey + ").DELETE Start");
         axios.delete(`https://sysfin-nodeapp1.herokuapp.com/api/v1/memo/` + uniqKey)
-        .then(respons => {
-            console.log(JSON.stringify(respons));
+        //.then(respons => {
+        .then(() => {
+            //console.log(JSON.stringify(respons));
             // 対象日のメモデータを再取得する
             this.getMemoData(this.currentDate);
         })
-        .catch(error => console.log(JSON.stringify(error)))
+        .catch(error => alert(JSON.stringify(error)))
       }
       return;
     },
@@ -115,8 +116,8 @@ export default {
       axios.get(`https://sysfin-nodeapp1.herokuapp.com/api/v1/memo/search?datestart=` + targetDate)
       .then(respons => {
           this.memos = respons.data;
-          console.log(respons.status);
-          console.log(JSON.stringify(this.memos));
+          //console.log(respons.status);
+          //console.log(JSON.stringify(this.memos));
 
           // 作業日時で昇順にソートする
           this.memos.data.sort(function(a, b) {
@@ -127,7 +128,7 @@ export default {
             return 0;
           });
 
-      }).catch(error => console.log("get memo data error : " + JSON.stringify(error)))
+      }).catch(error => alert("get memo data error : " + JSON.stringify(error)))
 
       return;
     },
@@ -138,7 +139,7 @@ export default {
       }
   },
   created() {
-      console.log("Start created()");
+      //console.log("Start created()");
 
       // 既に検索済みの対象日があるかチェックを行う
       if(this.selectDate){    // 引数に日付があるなら

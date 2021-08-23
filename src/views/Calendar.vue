@@ -1,5 +1,8 @@
 <template>
 <div>
+    <div class="modal-mask" v-if="isLoading === true">
+        <vue-loading type="spiningDubbles" color="blue" :size="{ width: '100px', height: '100px'}"></vue-loading>
+    </div>
     <h2 class="ml-10 mt-2">{{ currentDate.format("YYYY年MM月") }}</h2>
     <v-btn @click="prevMonth" color="primary" elevation="2" outlined class="ml-10 mb-1 pa-4">前月</v-btn>
     <v-btn @click="nextMonth" color="primary" elevation="2" outlined class="ml-2 mb-1 pa-4">次月</v-btn>
@@ -19,22 +22,22 @@
                 <v-card class="text-center pa-2 mr-1 mb-1" 
                         height=120 outlined tile 
                         v-bind:color="getColor(day)" 
-                        @dblclick="moveDetails(day.fullDate,rowIndex,colIndex)">
+                        @dblclick="moveDetails(day.fullDate)">
                     <v-btn rounded v-if="day.fullDate == nowDate.format('YYYY-MM-DD')" color="light-green lighten-2" 
                         class="font-weight-bold black--text" elevation="0"
-                        @click="moveDetails(day.fullDate,rowIndex,colIndex)">
+                        @click="moveDetails(day.fullDate)">
                             {{ day.date }} 
                     </v-btn>
                     <v-btn rounded text v-else-if="day.fullDate.slice(0,7) != currentDate.format('YYYY-MM')" class="grey--text" 
-                        @click="moveDetails(day.fullDate,rowIndex,colIndex)">
+                        @click="moveDetails(day.fullDate)">
                             {{ day.date }}
                     </v-btn>
                     <v-btn rounded text v-else-if="colIndex === 0" class="red--text"
-                        @click="moveDetails(day.fullDate,rowIndex,colIndex)">
+                        @click="moveDetails(day.fullDate)">
                             {{ day.date }}
                     </v-btn>
                     <v-btn rounded text v-else-if="colIndex === 6" class="blue--text"
-                        @click="moveDetails(day.fullDate,rowIndex,colIndex)">
+                        @click="moveDetails(day.fullDate)">
                             {{ day.date }}
                     </v-btn>
                     <v-btn rounded text v-else class="black--text"
@@ -56,6 +59,7 @@
 <script>
 import axios from "axios";
 import moment from "moment";
+import { VueLoading } from "vue-loading-template";    // VueLoadingの名前付きインポート
 export default {
     data() {
         return {
@@ -63,8 +67,12 @@ export default {
             currentDate: moment(),    // 対象日付に現在時刻を取得する
             calendars: [],            // カレンダーデータ保存領域
             memos: [],                // メモデータ保存領域
+            isLoading: true,          // ローディングフラグ
         };
     },
+    components: {
+        VueLoading
+    },    
     methods: {
         getStartDate() {
             let date = moment(this.currentDate);
@@ -122,11 +130,11 @@ export default {
             // 対象日時のメモデータの取得
             await axios.get(`https://sysfin-nodeapp1.herokuapp.com/api/v1/memo/search?datestart=` + startDate + `&dateend=` + endDate)
             .then(respons => {
-                console.log("API respons.data = " + JSON.stringify(respons.data));
+                //console.log("API respons.data = " + JSON.stringify(respons.data));
                 memoData = respons.data;
             })
             .catch(error => { 
-                console.log("getMemoData Error : " + JSON.stringify(error))
+                alert("getMemoData Error : " + JSON.stringify(error));
             })
             return(memoData);
         },
@@ -167,8 +175,8 @@ export default {
                 return("white");
             }
         },
-        moveDetails(selectDate, rowIndex, colIndex){
-            console.log("日付クリック " + selectDate + " rowIndex=" + rowIndex + " colIndex=" + colIndex);
+        moveDetails(selectDate){
+            //console.log("日付クリック " + selectDate + " rowIndex=" + rowIndex + " colIndex=" + colIndex);
             this.$router.push({ name: "Details", params: {selectDate: selectDate}}).catch(() => {});
         },
         async getSessionData(){
@@ -185,32 +193,38 @@ export default {
     },
     created() {
         ( async() => { 
-            console.log("created Start");
+            //console.log("created Start");
 
-            console.log("getSessionData Start");
+            //console.log("getSessionData Start");
             // セッションデータを取得および設定する
             await this.getSessionData();
-            console.log("getSessionData End");
+            //console.log("getSessionData End");
 
-            console.log("getMemoData Start " + moment().format('HH:mm:ss.SSS'));
+            //console.log("getMemoData Start " + moment().format('HH:mm:ss.SSS'));
             // 開始日から終了日までのメモデータを取得する
             let memoData = await this.getMemoData(moment(this.getStartDate()).format('YYYY-MM-DD'),
                                                     moment(this.getEndDate()).format('YYYY-MM-DD'));
-            console.log("getMemoData End " + moment().format('HH:mm:ss.SSS'));
+            //console.log("getMemoData End " + moment().format('HH:mm:ss.SSS'));
+            this.isLoading = false;    // ローティング画面を閉じる
 
             if(memoData){
-                console.log("getCalendar Start");
+                //console.log("getCalendar Start");
                 // カレンダーデータを取得する
                 this.calendars = await this.getCalendar(memoData);
-                console.log("getCalendar End");
+                //console.log("getCalendar End");
                 // プロパティへメモデータをコピーする
                 this.memos = memoData;    
             }else{
-                console.log("memoData = " + JSON.stringify(memoData));
+                //console.log("memoData = " + JSON.stringify(memoData));
             }
 
-            console.log("created End");
+            //console.log("created End");
         })();
     },
 }
 </script>
+
+<style>
+    @import "../style/MyStyle.css";
+</style>
+
